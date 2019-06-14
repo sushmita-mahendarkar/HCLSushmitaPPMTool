@@ -6,7 +6,6 @@ import {
   DELETE_PROJECT_TASK
 } from "./types";
 
-//Fix bug with priority in Spring Boot Server, needs to check null first
 export const addProjectTask = (
   backlog_id,
   project_task,
@@ -67,6 +66,24 @@ export const updateProjectTask = (
   try {
     await axios.patch(`/api/backlog/${backlog_id}/${pt_id}`, project_task);
     history.push(`/projectBoard/${backlog_id}`);
+    dispatch({
+      type: GET_ERRORS,
+      payload: {}
+    });
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    });
+  }
+};
+
+export const updateProjectTaskCategory = (pt) => async dispatch => {
+  
+  try {
+    let pt_id = pt.projectSequence;
+  let backlog_id = pt.projectIdentifier;
+  await axios.patch(`/api/backlog/${backlog_id}/${pt_id}`, pt);
     dispatch({
       type: GET_ERRORS,
       payload: {}
